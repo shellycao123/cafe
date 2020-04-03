@@ -7,4 +7,7 @@
    * DB_USER
    * DB_PASSWORD
    * PORT
+ * suggested way to run the app under the root directory: 
+   * npm start
+  
   

@@ -5,6 +5,7 @@ const mysql = require('mysql')
 const session = require('express-session')
 const dotenv = require('dotenv').config()
 const cors = require('cors')
+//const bcrypt = require('bcrypt')
 
 
 //setting up database 
@@ -36,6 +37,7 @@ app.use(cors(corsOptions))
 //setting up server and router
 app.use('/login', require('./routes/login'))
 app.use('/signup', require('./routes/signup'))
+//resouce not found handling
 app.use(function(req,res,next){
     res.status(404).send({msg: 'requested resource not found.'})
 })

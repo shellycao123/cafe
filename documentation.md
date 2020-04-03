@@ -1,3 +1,5 @@
+# Documentation for connection to the server
+## API list
 1. /login GET
 * parameters: username, pw(password)
 * success response: 200 {msg: 'successfully logged in.'}
