@@ -6,19 +6,6 @@ const session = require('express-session')
 const dotenv = require('dotenv').config()
 const cors = require('cors')
 
-//set up middleware
-app.use(express.json())
-app.use(express.static('public',  {maxAge: '1d'}))
-app.use(express.urlencoded())
-const corsOptions = {
-    origin: process.env.FRONTEND_ADDRESS,
-    methods: 'GET,POST'
-}
-app.use(cors(corsOptions))
-
-//setting up server and router
-app.use('/login', require('./routes/login'))
-app.use('/signup', require('./routes/signup'))
 
 //setting up database 
 const connection = mysql.createConnection({
@@ -36,13 +23,25 @@ connection.connect(function(err){
 });
 
 //setting up session
+//set up middleware
+app.use(express.json())
+app.use(express.static('public',  {maxAge: '1d'}))
+app.use(express.urlencoded())
+const corsOptions = {
+    origin: process.env.FRONTEND_ADDRESS,
+    methods: 'GET,POST'
+}
+app.use(cors(corsOptions))
 
+//setting up server and router
+app.use('/login', require('./routes/login'))
+app.use('/signup', require('./routes/signup'))
+app.use(function(req,res,next){
+    res.status(404).send({msg: 'requested resource not found.'})
+})
 
 
 //setting up server
-if(process.env.NODE_ENV == 'development'){
-    app.listen(5000)
-}
-app.listen()
+app.listen(process.env.PORT)
 //close all connections 
 connection.end()
