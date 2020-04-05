@@ -8,7 +8,7 @@
    * DB_PASSWORD
    * PORT
  * Before first start, make sure mysql is added to your environment variable list and execute the following command: 
-  * ./scripts/setup.sh
+   * ./scripts/setup.sh
  * suggested way to run the app under the root directory: 
    * npm start
   
