@@ -7,13 +7,13 @@
   *  401 {err: 'Log in credential is not valid.'}
   *  500 {err: 'There was something wrong with the server.'}
 2.  /user/signup POST
-*  parameters: username , pw(password)
+* parameters: username , pw(password)
 * success: 200 {msg: 'customer successfully signed up.'}
 * error: 
   * 400 {error: specific reason to reject the input}
   * 500 {err: 'There was something wrong with the server.'}
 3.  /cafe/signup POST
-*  parameters: username , pw(password)
+* parameters: username , pw(password)
 * success: 200 {msg: 'cafe successfully signed up.'}
 * error: 
   * 400 {error: specific reason to reject the input}
