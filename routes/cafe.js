@@ -6,7 +6,9 @@ router.post('/login', function(req,res,next){
     req.body.username
 })
 router.post('/signup', function(req,res,next){
-    
+    //check validity of phone number
+
+    //
 })
 
 

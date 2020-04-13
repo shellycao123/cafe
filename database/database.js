@@ -1,4 +1,5 @@
-
+//implementation is currently based on single db usage.
+//TO-DO: use mysql db connection pool to allow load balancing & multi-db usage
 const mysql = require('mysql')
 
 //setting up database 
@@ -6,7 +7,7 @@ const connection = mysql.createConnection({
     host: process.env.DB_ADDRESS,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database : process.env.DB_NAME
+database : 'cafe_db'
 })
 connection.connect(function(err){
     if(err){
