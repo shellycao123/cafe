@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 passport.use(new LocalStrategy(
     function(username, password, done) {
         //find the user in the db
-        db.connection.query({
+        db.query({
             sql: 'SELECT `user_username`,`user_phone_number` FROM `user` WHERE `user_username` = ?', 
             values: [username],
             timeout: 40000
@@ -38,3 +38,4 @@ passport.use(new LocalStrategy(
 
 
 //callback for db lookup result
+module.exports = passport
