@@ -19,7 +19,6 @@ app.use(cors(corsOptions))
 app.use(session({ secret: process.env.SECRET}));
 app.use(passport.initialize());
 app.use(passport.session());
-
 //setting up server and router
 app.use('/user', require('./routes/user'))
 app.use('/cafe', require('./routes/cafe'))
@@ -30,4 +29,4 @@ app.use(function(req,res,next){
 
 
 //setting up server
-app.listen(5000)
+app.listen(process.env.PORT)

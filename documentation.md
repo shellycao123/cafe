@@ -1,13 +1,13 @@
 # Documentation for connection to the server
 ## API list
-1. /user/login GET
+1. /user/login POST
 * parameters: username, password
 * success response: 200 {message: 'customer successfully logged in.'}
 * error response: 
-  *  401 {message: error message for the log in. }
+  *  401 when credential is wrong
   *  500 {err: 'There was something wrong with the server.'}
-1.  /user/signup POST
-* parameters: username , pw(password)
+2.  /user/signup POST
+* parameters: username , password, phone_number
 * success: 200 {msg: 'customer successfully signed up.'}
 * error: 
   * 400 {error: specific reason to reject the input}
