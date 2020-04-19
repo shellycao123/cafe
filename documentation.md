@@ -13,7 +13,7 @@
   * 400 {error: specific reason to reject the input}
   * 500 {err: 'There was something wrong with the server.'}
 3.  /cafe/signup POST
-* parameters: username , password
+* parameters: username , password, name
 * success: 200 {msg: 'cafe successfully signed up.'}
 * error: 
   * 400 {error: specific reason to reject the input}
