@@ -19,6 +19,7 @@ app.use(cors(corsOptions))
 app.use(session({ secret: process.env.SECRET}));
 app.use(passport.initialize());
 app.use(passport.session());
+
 //setting up server and router
 app.use('/user', require('./routes/user'))
 app.use('/cafe', require('./routes/cafe'))
