@@ -70,10 +70,11 @@ router.post('/addStar', loggedIn, function(req,res,next){
                         else{
                              //add to total point list
                             db.query({
-                                sql:'UPDATE `user_cafe` SET `points` = `points` + ? WHERE `user_username`= ? AND `cafe_username` = ?',
+                                sql:'UPDATE `user_cafe` SET `total` = `total` + ? WHERE `user_username`= ? AND `cafe_username` = ?',
                                 values: [req.body.price, req.user.user_username, req.body.cafe_username]
                             },function(error, results, fields){
                                 if(error){
+                                    console.log(error)
                                     return db.rollback(()=>{
                                         console.log('error when updating user_cafe')
                                         res.status(500).send({msg:'internal db error. '})
@@ -122,6 +123,52 @@ router.post('/addStar', loggedIn, function(req,res,next){
     })
 })
 router.post('/redeem', loggedIn, function(req,res,next){
+    if(!req.body.cafe_username || !req.body.price){
+        res.status(400).send({msg:'insufficient information.'})
+        return
+    }
+    hasCafe(req.body.cafe_username, db, (exists)=>{
+        if(exists){
+            db.beginTransaction((error)=>{
+                if(error){
+                    console.log('error beginning transaction.')
+                    return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                }
+                db.query({
+                    sql:'INSERT INTO `trans` (`cafe_username`, `user_username`, `trans_price`) VALUES(?, ?, ?)',
+                    values: [req.body.cafe_username, req.user.user_username, 0-req.body.price]
+                },function(error, results){
+                    if(error){
+                        console.log('error inserting trans.')
+                        return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                    }
+                    db.query({
+                        sql:'UPDATE `user_cafe` SET `total` = `total` - ? WHERE `user_username` = ? AND `cafe_username` = ? AND `total` >= ?',
+                        values: [req.body.price, req.user.user_username, req.body.cafe_username, req.body.price]
+                    }, (error, results)=>{
+                        if(error){
+                            console.log('error update user_cafe.')
+                            return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                        }
+                        if(results.affectedRows == 0){
+                            console.log('insufficient amount')
+                            return db.rollback(()=>{res.status(400).send({msg:'Insufficient amount'})})
+                        }
+                        db.commit((error)=>{
+                            if(error){
+                                console.log('error commiting.')
+                                return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                            }
+                            res.status(200).send({msg: 'star successfully redeemed.'})
+                        })
+                    })
+                })
+            })
+        }
+        else{
+            res.status(400).send({msg:'cafe name sent is incorrect. '})
+        }
+    })
 
 })
 

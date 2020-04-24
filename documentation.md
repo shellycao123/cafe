@@ -20,6 +20,17 @@
 * error: 
   * 400 {msg:'insufficient information.'}
   * 400 {msg:'cafe name sent is incorrect. '}
+  * 401 {msg:'User is not authenticated'}
+  * 500 {msg:'There is an internal db error'}
+4. /user/redeem POST 
+* prerequisite: user need to be logged in. 
+* parameters: cafe_username, price
+* success: 200 {msg: 'star successfully redeemed. '}
+  * error: 
+  * 400 {msg:'insufficient information.'}
+  * 400 {msg:'cafe name sent is incorrect. '}
+  * 400 {msg:'Insufficient amount'}
+  * 401 {msg:'User is not authenticated'}
   * 500 {msg:'There is an internal db error'}
 ### cafe APIs
 1.  /cafe/signup POST
@@ -64,4 +75,4 @@
 |---------------|-------------|------|-----|---------|-------|
 | user_username | varchar(50) | NO   | PRI | NULL    |       |
 | cafe_username | varchar(50) | NO   | PRI | NULL    |       |
-| star          | int(10)     | YES  |     | NULL    |       |
+| total          | int(10)     | YES  |     | NULL    |       |

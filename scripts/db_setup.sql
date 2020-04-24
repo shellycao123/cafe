@@ -22,7 +22,7 @@ CREATE TABLE trans(
 CREATE TABLE user_cafe(
     user_username varchar(50) references user(user_username),
     cafe_username varchar(50) references cafe(cafe_username),
-    points double(15, 5),
+    total double(15, 5),
     PRIMARY KEY(cafe_username, user_username)
 );
 CREATE TABLE 
