@@ -50,7 +50,6 @@ passport.use('local-user',new LocalStrategy(
                 return done(error)
             }
             if(results.length !== 1){
-                console.log('user exists')
                 return done(null, false, {message: 'Incorrect username.'})
             }
             return bcrypt.compare(password, results[0].user_password.toString()).then(function(result, error){
@@ -83,15 +82,15 @@ passport.deserializeUser(function(session, done) {
             sql:'SELECT * FROM `cafe` WHERE cafe_username= ?',
             values:[session.id]
         }, function(err, cafe) {
-          done(err, cafe);
+          done(err, cafe[0]);
         });
     }
     else{
         db.query({
-            sql:'SELECT * FROM `user` WHERE user_username=?',
+            sql:'SELECT user_username FROM `user` WHERE user_username=?',
             values:[session.id]
         }, function(err, user) {
-          done(err, user);
+          done(err, user[0]);
         });
     }
     
