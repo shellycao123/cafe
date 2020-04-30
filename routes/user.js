@@ -31,18 +31,17 @@ router.post('/signup', function(req,res,next){
         }
     })
 })
-router.post('/addStar', loggedIn, function(req,res,next){
+router.post('/addStar', loggedIn, function(req,res,next){   
     let values = []
     if(!req.body.cafe_username){
         res.status(400).send({msg:'insufficient information.'})
         return
     }
-    if(!req.body.price){
-        values.push(0.0)
+    let stars = 0.0;
+    if(req.body.stars != null){
+        stars = req.body.stars
     }
-    else{
-        values.push(req.body.price)
-    }
+    values.push(stars)
     values.push(req.user.user_username)
     hasCafe(req.body.cafe_username, db, function(exists){
         if(exists){
@@ -57,7 +56,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                 }
                 else{
                     db.query({
-                        sql:'INSERT INTO `trans`(`trans_price`,`user_username`,`cafe_username`) VALUES (?, ?, ?)',
+                        sql:'INSERT INTO `star_trans`(`stars`,`user_username`,`cafe_username`) VALUES (?, ?, ?)',
                         values,
                         timeout:40000
                     }, function(error, results, fields){
@@ -71,7 +70,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                              //add to total point list
                             db.query({
                                 sql:'UPDATE `user_cafe` SET `total` = `total` + ? WHERE `user_username`= ? AND `cafe_username` = ?',
-                                values: [req.body.price, req.user.user_username, req.body.cafe_username]
+                                values: [stars, req.user.user_username, req.body.cafe_username]
                             },function(error, results, fields){
                                 if(error){
                                     console.log(error)
@@ -83,7 +82,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                                 else if(!results || results.affectedRows != 1){
                                     db.query({
                                         sql:'INSERT INTO `user_cafe` VALUES (?,?,?)',
-                                        values: [req.user.user_username, req.body.cafe_username, req.body.price]
+                                        values: [req.user.user_username, req.body.cafe_username, stars]
                                     },function(error, results){
                                         if(error){
                                             return db.rollback(()=>{
@@ -123,7 +122,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
     })
 })
 router.post('/redeem', loggedIn, function(req,res,next){
-    if(!req.body.cafe_username || !req.body.price){
+    if(!req.body.cafe_username || !req.body.stars){
         res.status(400).send({msg:'insufficient information.'})
         return
     }
@@ -135,8 +134,8 @@ router.post('/redeem', loggedIn, function(req,res,next){
                     return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
                 }
                 db.query({
-                    sql:'INSERT INTO `trans` (`cafe_username`, `user_username`, `trans_price`) VALUES(?, ?, ?)',
-                    values: [req.body.cafe_username, req.user.user_username, 0-req.body.price]
+                    sql:'INSERT INTO `star_trans` (`cafe_username`, `user_username`, `stars`) VALUES(?, ?, ?)',
+                    values: [req.body.cafe_username, req.user.user_username, 0-req.body.stars]
                 },function(error, results){
                     if(error){
                         console.log('error inserting trans.')
@@ -144,7 +143,7 @@ router.post('/redeem', loggedIn, function(req,res,next){
                     }
                     db.query({
                         sql:'UPDATE `user_cafe` SET `total` = `total` - ? WHERE `user_username` = ? AND `cafe_username` = ? AND `total` >= ?',
-                        values: [req.body.price, req.user.user_username, req.body.cafe_username, req.body.price]
+                        values: [req.body.stars, req.user.user_username, req.body.cafe_username, req.body.stars]
                     }, (error, results)=>{
                         if(error){
                             console.log('error update user_cafe.')
@@ -168,6 +167,50 @@ router.post('/redeem', loggedIn, function(req,res,next){
         else{
             res.status(400).send({msg:'cafe name sent is incorrect. '})
         }
+    })
+
+})
+router.get('/history/trans/:cafe', loggedIn, function(req,res,next){
+    if(!req.params.cafe){
+        res.status(400).send({msg:'cafe name is missing in the parameter list'})
+        return
+    }
+    hasCafe(req.params.cafe,db, function(exists){
+        if(!exists){
+            res.status(400).send({msg:'cafe doesn\'t exist.'})
+            return
+        }
+        db.query('SELECT * FROM `trans` WHERE `cafe_username` = ? AND `user_username` = ?', [req.params.cafe,req.user.user_username], function(error, results){
+            if(error){
+                console.log(error)
+                res.status(500).send({msg:'There is an internal db error'})
+            }
+            else{
+                res.status(200).send({results})
+            }
+        })
+    })
+
+})
+router.get('/history/stars/:cafe', loggedIn, function(req,res,next){
+    if(!req.params.cafe){
+        res.status(400).send({msg:'cafe name is missing in the parameter list'})
+        return
+    }
+    hasCafe(req.params.cafe,db, function(exists){
+        if(!exists){
+            res.status(400).send({msg:'cafe doesn\'t exist.'})
+            return
+        }
+        db.query('SELECT * FROM `star_trans` WHERE `cafe_username` = ? AND `user_username` = ?', [req.params.cafe,req.user.user_username], function(error, results){
+            if(error){
+                console.log(error)
+                res.status(500).send({msg:'There is an internal db error'})
+            }
+            else{
+                res.status(200).send({results})
+            }
+        })
     })
 
 })

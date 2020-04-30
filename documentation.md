@@ -1,35 +1,57 @@
 # Documentation for connection to the server
 ## API list
 ### user APIs
-1. /user/login POST
+1. /user/login POST: user login
 * parameters: username, password
 * success response: 200 {msg: 'customer successfully logged in.'}
 * error response: 
   *  401 'Not authenticated.'
   *  500 {msg: 'There was something wrong with the server.'}
-2.  /user/signup POST
+2.  /user/signup POST: user signup
 * parameters: username , password, phone_number
 * success: 200 {msg: 'customer successfully signed up.'}
 * error: 
   * 400 {msg: specific reason to reject the input}
   * 500 {msg: 'There was something wrong with the server.'}
-3. /user/addStars POST
+3. /user/addStars POST: add star to a user's total at a cafe
 * prerequisite: user need to be logged in. 
-* parameters: cafe_username, price
-* success: 200 {msg: 'transaction successfully added. '}
+* parameters: cafe_username, stars
+* success: 
+  * 200 {msg: 'transaction successfully added. '}
 * error: 
   * 400 {msg:'insufficient information.'}
   * 400 {msg:'cafe name sent is incorrect. '}
   * 401 {msg:'User is not authenticated'}
   * 500 {msg:'There is an internal db error'}
-4. /user/redeem POST 
+4. /user/redeem POST: redeem the stars the user have at a restaurant
 * prerequisite: user need to be logged in. 
-* parameters: cafe_username, price
-* success: 200 {msg: 'star successfully redeemed. '}
-  * error: 
+* parameters: cafe_username, stars
+* success: 
+  * 200 {msg: 'star successfully redeemed. '}
+* error: 
   * 400 {msg:'insufficient information.'}
   * 400 {msg:'cafe name sent is incorrect. '}
   * 400 {msg:'Insufficient amount'}
+  * 401 {msg:'User is not authenticated'}
+  * 500 {msg:'There is an internal db error'}
+5. /user/history/stars/{cafe} GET: get a user's hisotry of adding star and redeeming star at a restaurant. 
+* prerequisite: user need to be logged in. 
+* parameter: replace the {cafe} in the url with the name of the cafe 
+* success:
+  * 200 {results: an array of star_trans object}
+* error: 
+  * 400 {msg:'cafe doesn't exist.'}
+  * 400 {msg:'cafe name is missing in the parameter list'}
+  * 401 {msg:'User is not authenticated'}
+  * 500 {msg:'There is an internal db error'}
+1. /user/history/trans/{cafe} GET: get a user's payment history at a cafe
+ * prerequisite: user need to be logged in. 
+ * parameter: replace the {cafe} in the url with the name of the cafe 
+ * success:
+  * 200 {results: an array of trans object}
+* error: 
+  * 400 {msg:'cafe doesn't exist.'}
+  * 400 {msg:'cafe name is missing in the parameter list'}
   * 401 {msg:'User is not authenticated'}
   * 500 {msg:'There is an internal db error'}
 ### cafe APIs

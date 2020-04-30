@@ -7,7 +7,7 @@ CREATE TABLE user(
 CREATE TABLE cafe(
     cafe_name varchar(50),
     cafe_location geometry,
-    cafe_policy double(5,3) DEFAULT null,
+    one_dollar_to double(8,5) DEFAULT 1.0,
     cafe_menu blob,
     cafe_username varchar(50)  PRIMARY KEY,
     cafe_password binary(60)
@@ -25,4 +25,11 @@ CREATE TABLE user_cafe(
     total double(15, 5),
     PRIMARY KEY(cafe_username, user_username)
 );
-CREATE TABLE 
+CREATE TABLE star_trans(
+    user_username varchar(50) references user(user_username),
+    cafe_username varchar(50) references cafe(cafe_username),
+    stars double(8,5),
+    stars_timestamp timestamp DEFAULT CURRENT_TIMESTAMP,
+    primary key(user_username, cafe_username, stars_timestamp)
+);
+
