@@ -5,8 +5,10 @@ const session = require('express-session')
 const dotenv = require('dotenv').config()
 const cors = require('cors')
 const passport = require('passport')
+const MySQLStore = require('express-mysql-session')(session);
+const db = require('./database/database.js')
+const sessionStore = new MySQLStore({}, db);
 
-//setting up session
 //set up middleware
 app.use(express.json())
 app.use(express.static('public',  {maxAge: '1d'}))
@@ -16,9 +18,16 @@ const corsOptions = {
     methods: 'GET,POST'
 }
 app.use(cors(corsOptions))
-app.use(session({ secret: process.env.SECRET}));
+
+app.use(session({ 
+    secret: process.env.SECRET,
+    store: sessionStore,
+    resave: false,
+    cookie:{maxAge: 1000 * 60 * 60 * 24},
+    saveUninitialized: false}));
 app.use(passport.initialize());
 app.use(passport.session());
+//setting up session
 
 //setting up server and router
 app.use('/user', require('./routes/user'))
@@ -31,3 +40,4 @@ app.use(function(req,res,next){
 
 //setting up server
 app.listen(process.env.PORT)
+sessionStore.close();
