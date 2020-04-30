@@ -214,6 +214,8 @@ router.get('/history/stars/:cafe', loggedIn, function(req,res,next){
     })
 
 })
+router.get('/:cafe/total', loggedIn, function(req,res,next){
+})
 
 function validate(body, fn){
     if(!body.username || !body.password){
