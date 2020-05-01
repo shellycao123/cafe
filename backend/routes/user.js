@@ -215,6 +215,25 @@ router.get('/history/stars/:cafe', loggedIn, function(req,res,next){
 
 })
 router.get('/:cafe/total', loggedIn, function(req,res,next){
+    hasCafe(req.params.cafe, db, (exists)=>{
+        if(!exists){
+            res.status(400).send({msg:'cafe doesn\'t exist.'})
+            return
+        }
+        db.query('SELECT `total` FROM `user_cafe` WHERE `user_username` = ? AND `cafe_username` = ?',
+         [req.user.user_username,req.params.cafe], function(error, results){
+             if(error){
+                 console.log(error)
+                 res.status(500).send({msg:'There is an internal db error'})
+             }
+             else if(results.length == 0){
+                res.status(400).send({msg:'User doesn\'t have any star history in the cafe'})
+             }
+             else{
+                 res.status(200).send(results[0])
+             }
+         } )
+    })
 })
 
 function validate(body, fn){

@@ -36,7 +36,7 @@
   * 500 {msg:'There is an internal db error'}
 5. /user/history/stars/{cafe} GET: get a user's hisotry of adding star and redeeming star at a restaurant. 
 * prerequisite: user need to be logged in. 
-* parameter: replace the {cafe} in the url with the name of the cafe 
+* parameter: replace the {cafe} in the url with the username of the cafe 
 * success:
   * 200 {results: an array of star_trans object}
 * error: 
@@ -44,14 +44,24 @@
   * 400 {msg:'cafe name is missing in the parameter list'}
   * 401 {msg:'User is not authenticated'}
   * 500 {msg:'There is an internal db error'}
-1. /user/history/trans/{cafe} GET: get a user's payment history at a cafe
+6. /user/history/trans/{cafe} GET: get a user's payment history at a cafe
  * prerequisite: user need to be logged in. 
- * parameter: replace the {cafe} in the url with the name of the cafe 
+ * parameter: replace the {cafe} in the url with the username of the cafe 
  * success:
   * 200 {results: an array of trans object}
 * error: 
   * 400 {msg:'cafe doesn't exist.'}
   * 400 {msg:'cafe name is missing in the parameter list'}
+  * 401 {msg:'User is not authenticated'}
+  * 500 {msg:'There is an internal db error'}
+7. /user/{cafe}/total GET: get the total star of a user at a cafe
+ * prerequisite: user need to be logged in. 
+ * parameter: replace the {cafe} in the url with the username of the cafe 
+ * success:
+  * 200 {total: total stars}
+*  error: 
+  * 400 {msg:'cafe doesn't exist.'}
+  * 400 {msg:'User doesn't have any star history in the cafe'}
   * 401 {msg:'User is not authenticated'}
   * 500 {msg:'There is an internal db error'}
 ### cafe APIs
