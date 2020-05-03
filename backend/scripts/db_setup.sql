@@ -1,4 +1,4 @@
-CREATE DATABASE cafe_db;
+CREATE DATABASE IF NOT EXISTS cafe_db;
 USE cafe_db;
 CREATE TABLE user(
     user_username varchar(50) PRIMARY KEY,
