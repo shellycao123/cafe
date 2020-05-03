@@ -6,7 +6,7 @@ const Error = require('../util/error.js')
 const bcrypt = require('bcrypt')
 
 router.post('/login', passport.authenticate('local-user'), function(req,res,next){
-    res.status(200).send({message: 'customer successfully logged in.'})
+    res.status(200).json({message: 'customer successfully logged in.'})
 })
 router.post('/signup', function(req,res,next){
     validate(req.body, function(err){
@@ -18,23 +18,23 @@ router.post('/signup', function(req,res,next){
                 values: [req.body.username, hash]
                 }, function(error, results, fields) {
                     if(error){
-                        res.status(500).send({msg:'server error'})
+                        res.status(500).json({msg:'server error'})
                     }
                     else{
-                        res.status(200).send({msg:'successfully signed up.'})
+                        res.status(200).json({msg:'successfully signed up.'})
                     }
                 })
             })
         }
         else{
-            res.status(err.status).send({msg:err.message})
+            res.status(err.status).json({msg:err.message})
         }
     })
 })
 router.post('/addStar', loggedIn, function(req,res,next){   
     let values = []
     if(!req.body.cafe_username){
-        res.status(400).send({msg:'insufficient information.'})
+        res.status(400).json({msg:'insufficient information.'})
         return
     }
     let stars = 0.0;
@@ -51,7 +51,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                 if (err){
                     return db.rollback(()=>{
                         console.log('error when starting the transaction')
-                        res.status(500).send({msg:'internal db error. '})
+                        res.status(500).json({msg:'internal db error. '})
                     })
                 }
                 else{
@@ -63,7 +63,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                         if(error){
                             return db.rollback(()=>{
                                 console.log(' error when insert transaction value')
-                                res.status(500).send({msg:'internal db error. '})
+                                res.status(500).json({msg:'internal db error. '})
                             })
                         }
                         else{
@@ -76,7 +76,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                                     console.log(error)
                                     return db.rollback(()=>{
                                         console.log('error when updating user_cafe')
-                                        res.status(500).send({msg:'internal db error. '})
+                                        res.status(500).json({msg:'internal db error. '})
                                     })
                                 }
                                 else if(!results || results.affectedRows != 1){
@@ -87,7 +87,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
                                         if(error){
                                             return db.rollback(()=>{
                                                 console.log('error when insert into user_cafe')
-                                                res.status(500).send({msg:'internal db error. '})
+                                                res.status(500).json({msg:'internal db error. '})
                                             })
                                         }
                                         else{
@@ -95,18 +95,18 @@ router.post('/addStar', loggedIn, function(req,res,next){
                                                 if (err) {
                                                   return connection.rollback(function() {
                                                     console.log(error)
-                                                    res.status(500).send({msg:'internal db error. '})
+                                                    res.status(500).json({msg:'internal db error. '})
                                                   });
                                                 }
                                                 else{
-                                                    res.status(200).send({msg: 'transaction added successfully'})
+                                                    res.status(200).json({msg: 'transaction added successfully'})
                                                 }
                                             })
                                         }
                                     })
                                 }
                                 else{
-                                    res.status(200).send({msg: 'transaction added successfully'})
+                                    res.status(200).json({msg: 'transaction added successfully'})
                                 }
                         })
                         }
@@ -115,7 +115,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
             })
         }
         else{
-            res.status(400).send({msg:'cafe name sent is incorrect. '})
+            res.status(400).json({msg:'cafe name sent is incorrect. '})
         }
 
 
@@ -123,7 +123,7 @@ router.post('/addStar', loggedIn, function(req,res,next){
 })
 router.post('/redeem', loggedIn, function(req,res,next){
     if(!req.body.cafe_username || !req.body.stars){
-        res.status(400).send({msg:'insufficient information.'})
+        res.status(400).json({msg:'insufficient information.'})
         return
     }
     hasCafe(req.body.cafe_username, db, (exists)=>{
@@ -131,7 +131,7 @@ router.post('/redeem', loggedIn, function(req,res,next){
             db.beginTransaction((error)=>{
                 if(error){
                     console.log('error beginning transaction.')
-                    return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                    return db.rollback(()=>{res.status(500).json({msg:'internal db error.'})})
                 }
                 db.query({
                     sql:'INSERT INTO `star_trans` (`cafe_username`, `user_username`, `stars`) VALUES(?, ?, ?)',
@@ -139,7 +139,7 @@ router.post('/redeem', loggedIn, function(req,res,next){
                 },function(error, results){
                     if(error){
                         console.log('error inserting trans.')
-                        return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                        return db.rollback(()=>{res.status(500).json({msg:'internal db error.'})})
                     }
                     db.query({
                         sql:'UPDATE `user_cafe` SET `total` = `total` - ? WHERE `user_username` = ? AND `cafe_username` = ? AND `total` >= ?',
@@ -147,46 +147,46 @@ router.post('/redeem', loggedIn, function(req,res,next){
                     }, (error, results)=>{
                         if(error){
                             console.log('error update user_cafe.')
-                            return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                            return db.rollback(()=>{res.status(500).json({msg:'internal db error.'})})
                         }
                         if(results.affectedRows == 0){
                             console.log('insufficient amount')
-                            return db.rollback(()=>{res.status(400).send({msg:'Insufficient amount'})})
+                            return db.rollback(()=>{res.status(400).json({msg:'Insufficient amount'})})
                         }
                         db.commit((error)=>{
                             if(error){
                                 console.log('error commiting.')
-                                return db.rollback(()=>{res.status(500).send({msg:'internal db error.'})})
+                                return db.rollback(()=>{res.status(500).json({msg:'internal db error.'})})
                             }
-                            res.status(200).send({msg: 'star successfully redeemed.'})
+                            res.status(200).json({msg: 'star successfully redeemed.'})
                         })
                     })
                 })
             })
         }
         else{
-            res.status(400).send({msg:'cafe name sent is incorrect. '})
+            res.status(400).json({msg:'cafe name sent is incorrect. '})
         }
     })
 
 })
 router.get('/history/trans/:cafe', loggedIn, function(req,res,next){
     if(!req.params.cafe){
-        res.status(400).send({msg:'cafe name is missing in the parameter list'})
+        res.status(400).json({msg:'cafe name is missing in the parameter list'})
         return
     }
     hasCafe(req.params.cafe,db, function(exists){
         if(!exists){
-            res.status(400).send({msg:'cafe doesn\'t exist.'})
+            res.status(400).json({msg:'cafe doesn\'t exist.'})
             return
         }
         db.query('SELECT * FROM `trans` WHERE `cafe_username` = ? AND `user_username` = ?', [req.params.cafe,req.user.user_username], function(error, results){
             if(error){
                 console.log(error)
-                res.status(500).send({msg:'There is an internal db error'})
+                res.status(500).json({msg:'There is an internal db error'})
             }
             else{
-                res.status(200).send({results})
+                res.status(200).json({results})
             }
         })
     })
@@ -194,21 +194,21 @@ router.get('/history/trans/:cafe', loggedIn, function(req,res,next){
 })
 router.get('/history/stars/:cafe', loggedIn, function(req,res,next){
     if(!req.params.cafe){
-        res.status(400).send({msg:'cafe name is missing in the parameter list'})
+        res.status(400).json({msg:'cafe name is missing in the parameter list'})
         return
     }
     hasCafe(req.params.cafe,db, function(exists){
         if(!exists){
-            res.status(400).send({msg:'cafe doesn\'t exist.'})
+            res.status(400).json({msg:'cafe doesn\'t exist.'})
             return
         }
         db.query('SELECT * FROM `star_trans` WHERE `cafe_username` = ? AND `user_username` = ?', [req.params.cafe,req.user.user_username], function(error, results){
             if(error){
                 console.log(error)
-                res.status(500).send({msg:'There is an internal db error'})
+                res.status(500).json({msg:'There is an internal db error'})
             }
             else{
-                res.status(200).send({results})
+                res.status(200).json({results})
             }
         })
     })
@@ -217,20 +217,20 @@ router.get('/history/stars/:cafe', loggedIn, function(req,res,next){
 router.get('/:cafe/total', loggedIn, function(req,res,next){
     hasCafe(req.params.cafe, db, (exists)=>{
         if(!exists){
-            res.status(400).send({msg:'cafe doesn\'t exist.'})
+            res.status(400).json({msg:'cafe doesn\'t exist.'})
             return
         }
         db.query('SELECT `total` FROM `user_cafe` WHERE `user_username` = ? AND `cafe_username` = ?',
          [req.user.user_username,req.params.cafe], function(error, results){
              if(error){
                  console.log(error)
-                 res.status(500).send({msg:'There is an internal db error'})
+                 res.status(500).json({msg:'There is an internal db error'})
              }
              else if(results.length == 0){
-                res.status(400).send({msg:'User doesn\'t have any star history in the cafe'})
+                res.status(400).json({msg:'User doesn\'t have any star history in the cafe'})
              }
              else{
-                 res.status(200).send(results[0])
+                 res.status(200).json(results[0])
              }
          } )
     })
@@ -259,7 +259,7 @@ function validate(body, fn){
 
 function loggedIn(req, res, next){
     if(!req.user || !req.user.user_username){
-        res.status(401).send({msg:'User is not authenticated'})
+        res.status(401).json({msg:'User is not authenticated'})
     }
     else{
         return next();

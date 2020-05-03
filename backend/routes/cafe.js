@@ -6,7 +6,7 @@ const Error = require('../util/error.js')
 const bcrypt = require('bcrypt')
 
 router.post('/login', passport.authenticate('local-cafe'), function(req,res,next){
-    res.status(200).send({message: 'cafe successfully logged in.'})
+    res.status(200).json({message: 'cafe successfully logged in.'})
 })
 router.post('/signup', function(req,res,next){
     validate(req.body, function(err){
@@ -18,16 +18,16 @@ router.post('/signup', function(req,res,next){
                 values: [req.body.username, hash,req.body.name]
                 }, function(error, results, fields) {
                     if(error){
-                        res.status(500).send({msg:'server error'})
+                        res.status(500).json({msg:'server error'})
                     }
                     else{
-                        res.status(200).send({msg:'successfully signed up.'})
+                        res.status(200).json({msg:'successfully signed up.'})
                     }
                 })
             })
         }
         else{
-            res.status(err.status).send({msg:err.message})
+            res.status(err.status).json({msg:err.message})
         }
     })
 })

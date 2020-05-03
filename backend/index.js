@@ -34,7 +34,7 @@ app.use('/user', require('./routes/user'))
 app.use('/cafe', require('./routes/cafe'))
 //resouce not found handling
 app.use(function(req,res,next){
-    res.status(404).send({msg: 'requested resource not found.'})
+    res.status(404).send({msg: 'The request resource does not exist.'})
 })
 
 
