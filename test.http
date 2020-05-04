@@ -1,0 +1,51 @@
+POST http://localhost:3000/user/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user",
+    "password": "test"
+}
+###
+POST http://localhost:3000/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user",
+    "password": "test"
+}
+
+
+###
+POST http://localhost:3000/cafe/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "cafe",
+    "name": "starbucks",
+    "password": "test"
+}
+
+###
+POST http://localhost:3000/user/addStar HTTP/1.1
+content-type: application/json
+
+{
+    "cafe_username": "starbucks",
+    "stars": 10
+}
+
+###
+POST http://localhost:3000/user/redeem HTTP/1.1
+content-type: application/json
+
+{
+    "cafe_username": "starbucks",
+    "stars": 10
+}
+
+###
+GET http://localhost:3000/user/history/stars/starbucks HTTP/1.1
+content-type: application/json
+
+###
+GET http://localhost:3000/user/starbucks/total HTTP/1.1

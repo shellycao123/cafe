@@ -6,6 +6,7 @@
    * DB_ADDRESS
    * DB_USER
    * DB_PASSWORD
+   * DB_NAME
    * SECRET
 2. Before first run of the server, make sure mysql is added to your environment variable list and execute the following command: 
    * ./scripts/setup.sh
