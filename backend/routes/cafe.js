@@ -37,6 +37,19 @@ router.post('/addMenu', function(){
 router.post('/addPolicy',function(){
 
 })
+router.get('/getAllStars', loggedIn, function(req,res,next){
+ let sql = 'SELECT user_username, total From user_cafe natural join user where cafe_username = ?'
+ db.query(sql, req.user.cafe_username, function(error, results){
+     if(error){
+         console.log(error)
+     }
+     res.status(200).json(results)
+ })
+})
+router.get('/getInfo/:cafe', function(req,res,next){
+    let sql = 'select * from cafe where cafe_username = ? '
+    db.query()
+})
 
 function validate(body, fn){
     if(!body.username || !body.password){
@@ -57,6 +70,12 @@ function validate(body, fn){
             fn();
         }
     })
+}
+function loggedIn(req,res,next){
+    if(!req.user || !req.user.cafe_username){
+        res.status(401).json({msg:'Cafe is not authenticated'})
+    }
+    next()
 }
 
 

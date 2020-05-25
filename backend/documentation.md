@@ -64,6 +64,12 @@
   * 400 {msg:'User doesn't have any star history in the cafe'}
   * 401 {msg:'User is not authenticated'}
   * 500 {msg:'There is an internal db error'}
+8. /user/getAllCafe GET: get all cafe the customer has made any transactions with/ 
+  * success: 
+    * 200 [{cafe_username, total, cafe_name, cafe_location, cafe_policy, cafe_menu}]
+  * error: 
+    * 401 {msg:'User is not authenticated'}
+    * 500 {msg:'There is an internal db error'}
 ### cafe APIs
 1.  /cafe/signup POST
 * parameters: username , password, name
@@ -71,13 +77,17 @@
 * error: 
   * 400 {msg: specific reason to reject the input}
   * 500 {msg: 'There was something wrong with the server.'}
-4. /cafe/login POST
+2. /cafe/login POST
 * parameters: username, password
-* success response: 200 {msg: 'cafe successfully logged in.'}
+* success: 200 {msg: 'cafe successfully logged in.'}
 * error response: 
-  *  401 'Not authenticated. '
+  *  401 {msg: 'Not authenticated. '}
   *  500 {msg: 'There was something wrong with the server.'}
-5. 
+3. /cafe/getAllStars GET: get the star of all customers that have vistied the cafe
+* success: 200 [{user_username, total}]
+* error: 
+  * 401: {msg: 'Cafe is not authenticated'}
+  * 500 {msg:'There was something wrong with the server.' }
 
 ## DB layout 
 ### user

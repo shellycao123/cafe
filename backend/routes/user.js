@@ -235,6 +235,19 @@ router.get('/:cafe/total', loggedIn, function(req,res,next){
          } )
     })
 })
+router.get('/getAllCafe', loggedIn, function(req,res,next){
+    let sql = 'SELECT cafe_username, total, cafe_name, cafe_location, cafe_policy, cafe_menu FROM user_cafe NATURAL JOIN cafe where user_username = ? '
+    db.query(sql, req.user.user_username, function(error, results){
+        if(error){
+            console.log(error)
+            res.status(500).json({msg: 'There is an internal db error'})
+        }
+        else{
+            res.status(200).json(results)
+        }
+    })
+})
+
 
 function validate(body, fn){
     if(!body.username || !body.password){
