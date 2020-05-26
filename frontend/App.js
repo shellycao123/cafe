@@ -1,11 +1,17 @@
 import React, { Component, useState } from 'react';
-import { View, Text, Linking, TextInput, TouchableOpacity, TouchableHighlight, SafeAreaView, ScrollView, Keyboard, Alert} from 'react-native';
+import { View, Text, Button, Linking, TextInput, TouchableOpacity, TouchableHighlight, SafeAreaView, ScrollView, Keyboard, Alert, StyleSheet, Picker, Image} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import {NavigationContainer} from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import PersonalInfo from "./components/Screen.js"
+import MyKeyboard from "./components/Keyboard.js"
+import Icon from 'react-native-vector-icons/Ionicons'
+import { Dropdown } from 'semantic-ui-react'
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import styles from './style'
-import {handleSignUp} from './handleRequest.js'
+import {handleSignUp, handleSignIn} from './handleRequest.js'
 const URL="http://192.168.1.170:3000"
 
 
@@ -39,7 +45,7 @@ function WelcomePage({navigation}) {
   );
 }
 
-function SignUpPage() {
+function SignUpPage({navigation}) {
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("")
@@ -66,7 +72,7 @@ function SignUpPage() {
           <TextInput
               style={styles.inputText}
               onChangeText={(text) => setPassword(text)}
-              onSubmitEditing={()=>handleSignUp(email, phone, password, url)}
+              onSubmitEditing={()=>handleSignUp(email, phone, password, url, navigation, "Home")}
           />
 
           <Text style={styles.normalText, {paddingTop:30}}>
@@ -78,7 +84,7 @@ function SignUpPage() {
           <View style={{alignItems:'center'}}>
             <TouchableOpacity
                 style={styles.button}
-                onPress={()=>handleSignUp(email, phone, password, url)}
+                onPress={()=>handleSignUp(email, phone, password, url, navigation, "Home")}
             >
                 <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
@@ -88,7 +94,7 @@ function SignUpPage() {
   );
 }
 
-function SignInPage() {
+function SignInPage({navigation}) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const url = URL+'/user/login'
@@ -125,7 +131,7 @@ function SignInPage() {
           <View style={{alignItems:'center', marginTop: 50}}>
             <TouchableOpacity
                 style={styles.button}
-                onPress={()=>handleSignIn(email, password, url)}
+                onPress={()=>handleSignIn(email, password, url, navigation, "Home")}
             >
                 <Text style={styles.buttonText}>Sign In</Text>
             </TouchableOpacity>
@@ -155,9 +161,171 @@ function AmountPage(){
   )
 }
 
+function DebuteaScreen({navigation}){
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Debutea Screen</Text>
+      <Text>{"\n"}Below is your transaction history at Debutea</Text>
+      <PersonalInfo />
+      <Button 
+        title="enter your star"
+        onPress={() => {
+          navigation.navigate('DebuteaStar')}
+        }
+      />
+    </View>
+  );
+}
+
+//
+function Feed({navigation}){
+  const [selectedValue, setSelectedValue] = useState("java");
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Icon name="md-heart" style={styles.homepageWelcomeIconStyle}/>
+      <Text style={styles.homepageWelcomeTextStyle}>Welcome back!</Text>
+      <View style={styles.container}>
+
+      <Picker
+        selectedValue={selectedValue}
+        style={{ height: 50, width: 500 }}
+        onValueChange={(itemValue, itemIndex) => {
+          setSelectedValue(itemValue);
+          navigation.navigate(itemValue)
+        }
+      }>
+        <Picker.Item label="select your cafe!!!" value="Home"/>
+        <Picker.Item label="Debutea" value="Debutea" />
+        <Picker.Item label="PhoBar" value="PhoBar" />
+      </Picker>
+      </View>
+
+    </View>
+  );
+}
+
+function PhoBarScreen({navigation}){
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Image source={require('./components/images/phobar.jpg')} style={{ width: 100, height: 100 }}/>
+      <Text style={{ fontSize: 30, position:"absolute", top:200}}>Welcomd back to Pho Bar</Text>
+      <Text style={{ fontSize: 15, position:"absolute", top:220}}>{"\n"}Below is your transaction history at Pho Bar</Text>
+      <PersonalInfo />
+      <Button 
+        title="enter your star"
+        onPress={() => {
+          navigation.navigate('PhoBarStar')}
+        }
+      />
+    </View>
+  );
+}
+
+
+function trysecond({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button onPress={() => navigation.goBack()} title="Go back home" />
+    </View>
+  );
+}
+
+
+function HomeScreen({navigation}) {
+  return (
+    <>
+    <Tab.Navigator>
+      <Tab.Screen name="Homepage" component={Feed} />
+      <Tab.Screen name="Your Account" component={AccountScreen} />
+    </Tab.Navigator>
+    </>
+  );
+}
+
+
+function AccountScreen(){
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Image source={require('./components/images/kirby.jpg')} style={{ width: 100, height: 100 }}/>
+      <Text style={{ fontSize: 30 }}>Account Screen</Text>
+      <Text style={{ fontSize: 15 }}>bellow is your transaction history ???/asdfasdf</Text>
+      <PersonalInfo />
+      <Text>you wanna change your information?</Text>
+    </View>
+  );
+}
+
+
+
+//
+function DetailsScreen({navigation}){
+  // const [title, setStar] = useState('Details');
+
+  return (
+    <View>
+        <Text style = {{ textAlign: 'center', fontSize: 20 }}>details page</Text>
+        <Button 
+          title="go to Details"
+          onPress={() => {
+            navigation.navigate('PhoBarStar')}
+          }
+        />
+    </View>
+  );
+}
+
+
+//
+function DebuteaChoiceScreen(){
+  const [star, setStar] = useState(0);
+  const [sticker] = "🍹";
+
+  return (
+    <>
+    <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <MyKeyboard />
+      <Button
+        title="submit"
+        color="green"
+        onPress={() => { setStar(star + 3) }} 
+      />
+      <Text>Right now you have: {star} stars {sticker}</Text>
+    </View>
+    </>
+  );
+}
+
+
+// 
+function PhoBarChoiceScreen(){
+  const [star, setStar] = useState(0);
+  const [sticker] = "🍑";
+
+  return (
+    <>
+    <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <MyKeyboard />
+      <Button
+        title="submit"
+        color="green"
+        onPress={() => { setStar(star + 4) }} 
+      />
+      <Text>Right now you have: {star} stars {sticker}</Text>
+    </View>
+    </>
+  );
+}
+
+
 
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator(); 
+const Drawer = createDrawerNavigator();
+
 function App() {
   return (
     <NavigationContainer>
@@ -166,6 +334,12 @@ function App() {
         <Stack.Screen name="SignUp" component={SignUpPage} />
         <Stack.Screen name="SignIn" component={SignInPage} />
         <Stack.Screen name="Amount" component={AmountPage} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="PhoBar" component={PhoBarScreen} />
+        <Stack.Screen name="Debutea" component={DebuteaScreen} />
+        <Stack.Screen name="DebuteaStar" component={DebuteaChoiceScreen} />
+        <Stack.Screen name="PhoBarStar" component={PhoBarChoiceScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
