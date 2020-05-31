@@ -6,7 +6,7 @@ export default class PickerWrapper extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      pickerValue = "a";
+      pickerValue = "a"
     }
   }
 
@@ -46,7 +46,12 @@ const styles = StyleSheet.create({
   iconWrap: {
     marginTop: 2,
     marginLeft: 3
-  }
+  },
+  container: {  
+    flex: 1,  
+    alignItems: 'center',  
+    justifyContent: 'center',  
+  }, 
 })
 
 

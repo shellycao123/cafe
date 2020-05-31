@@ -19,27 +19,27 @@ function WelcomePage({navigation}) {
   return (
     <SafeAreaView style={{flex: 1, margin:30, alignItems:'center'}}>
     <ScrollView>
-      <Text style={styles.pageTitle}>Welcome page🎉</Text>
+      <Text style={[styles.h1, styles.centerText, styles.largeMargin]}>Welcome!</Text>
       <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, styles.mediumMargin]}
           onPress={()=>navigation.navigate("SignUp")}
       >
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={[styles.h3, styles.centerText]}>Sign Up</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, styles.mediumMargin]}
           onPress={()=>navigation.navigate("SignIn")}
       >
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text style={[styles.h3, styles.centerText]}>Sign In</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-          style={styles.button}
+      {/* <TouchableOpacity
+          style={[styles.button, styles.mediumMargin]}
           onPress={()=>navigation.navigate("Amount")}
       >
-          <Text style={styles.buttonText}>Amount Page</Text>
-      </TouchableOpacity>
+          <Text style={[styles.h3, styles.centerText]}>Amount Page</Text>
+      </TouchableOpacity> */}
     </ScrollView>
     </SafeAreaView>
   );
@@ -54,28 +54,28 @@ function SignUpPage({navigation}) {
   return (
       <SafeAreaView style={{flex: 1, margin:30}}>
       <ScrollView>
-          <Text style={styles.sectionTitle}>Email</Text>
+          <Text style={[styles.h2, styles.smallMargin]}>Email</Text>
           <TextInput
               style={styles.inputText}
-              placeholder="me@RewardIN.com"
               onChangeText={(text) => setEmail(text)}
           />
 
-          <Text style={styles.sectionTitle}>Phone</Text>
+          <Text style={[styles.h2, styles.smallMargin]}>Phone</Text>
           <TextInput
               style={styles.inputText}
-              placeholder="212-383-5083"
               onChangeText={(text) => setPhone(text)}
           />
 
-          <Text style={styles.sectionTitle}>Password</Text>
+          <Text style={[styles.h2, styles.smallMargin]}>Password</Text>
           <TextInput
               style={styles.inputText}
               onChangeText={(text) => setPassword(text)}
+              returnKeyType="go"
+              enablesReturnKeyAutomatically={true}
               onSubmitEditing={()=>handleSignUp(email, phone, password, url, navigation, "Home")}
           />
 
-          <Text style={styles.normalText, {paddingTop:30}}>
+          <Text style={[styles.text, styles.mediumMargin]}>
               <Text>By clicking Sign Up,I agree to the </Text>
               <Text style={{fontWeight: 'bold'}} onPress={() => Linking.openURL('http://google.com')}>Terms&Services</Text>
               <Text> and </Text> <Text style={{fontWeight: 'bold'}} onPress={() => Linking.openURL('http://google.com')}>Privacy Policy</Text>
@@ -83,10 +83,10 @@ function SignUpPage({navigation}) {
 
           <View style={{alignItems:'center'}}>
             <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, styles.mediumMargin]}
                 onPress={()=>handleSignUp(email, phone, password, url, navigation, "Home")}
             >
-                <Text style={styles.buttonText}>Sign Up</Text>
+                <Text style={[styles.h3, styles.centerText]}>Sign Up</Text>
             </TouchableOpacity>
           </View>
       </ScrollView>
@@ -102,17 +102,20 @@ function SignInPage({navigation}) {
   return (
       <SafeAreaView style={{flex:1, margin:30}}>
       <ScrollView>
-      <Text style={styles.pageTitle}>Sign In</Text>
-          <Text style={styles.sectionTitle}>Email</Text>
+      <Text style={[styles.h1, styles.centerText, styles.largeMargin]}>Sign In</Text>
+          <Text style={[styles.h2, styles.smallMargin]}>Email</Text>
           <TextInput
               style={styles.inputText}
               onChangeText={(text) => setEmail(text)}
           />
 
-          <Text style={styles.sectionTitle}>Password</Text>
+          <Text style={[styles.h2, styles.smallMargin]}>Password</Text>
           <TextInput
               style={styles.inputText}
               onChangeText={(text) => setPassword(text)}
+              returnKeyType="go"
+              enablesReturnKeyAutomatically = {true}
+              onSubmitEditing={()=>handleSignIn(email, password, url, navigation, "Home")}
           />
 
           <View style={{marginTop: 50, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flex: 1}}>
@@ -130,10 +133,10 @@ function SignInPage({navigation}) {
 
           <View style={{alignItems:'center', marginTop: 50}}>
             <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, styles.mediumMargin]}
                 onPress={()=>handleSignIn(email, password, url, navigation, "Home")}
             >
-                <Text style={styles.buttonText}>Sign In</Text>
+                <Text style={[styles.h3, styles.centerText]}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -141,38 +144,36 @@ function SignInPage({navigation}) {
   );
 }
 
-function AmountPage(){
-  return (
-    <SafeAreaView style={{flex:1, margin: 30, justifyContent: 'center', alignItems: 'center'}}>
-    <ScrollView keyboardShouldPersistTaps='never'>
-      <Text style={styles.pageTitle}>Please Enter Amount</Text>
-      <TextInput
-      style={[styles.inputText, {height: 60, width: 250, fontSize: 30}]}
-      keyboardType = "decimal-pad"
-      />
-      <TouchableOpacity
-          style={styles.button}
-          onPress={()=>null}
-      >
-          <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-    </ScrollView>
-    </SafeAreaView>
-  )
-}
+// function AmountPage(){
+//   return (
+//     <SafeAreaView style={{flex:1, margin: 30, justifyContent: 'center', alignItems: 'center'}}>
+//     <ScrollView keyboardShouldPersistTaps='never'>
+//       <Text style={[styles.h1, styles.positionTitle]}>Please Enter Amount</Text>
+//       <TextInput
+//       style={[styles.inputText, {height: 60, width: 250, fontSize: 30}]}
+//       keyboardType = "decimal-pad"
+//       />
+//       <TouchableOpacity
+//           style={[styles.button, styles.mediumMargin]}
+//           onPress={()=>null}
+//       >
+//           <Text style={[styles.h3, styles.centerText]}>Submit</Text>
+//       </TouchableOpacity>
+//     </ScrollView>
+//     </SafeAreaView>
+//   )
+// }
 
 function DebuteaScreen({navigation}){
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Debutea Screen</Text>
-      <Text>{"\n"}Below is your transaction history at Debutea</Text>
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      <Text style={[styles.h2, styles.largeMargin]}>Welcome to Debutea Screen</Text>
+      <Text style={[styles.text, styles.smallMargin]}>{"\n"}Below is your transaction history at Debutea</Text>
       <PersonalInfo />
-      <Button 
-        title="enter your star"
-        onPress={() => {
-          navigation.navigate('DebuteaStar')}
-        }
-      />
+      <TouchableOpacity style={[styles.button, styles.mediumMargin]} onPress={() => {
+          navigation.navigate('DebuteaStar')}}>
+        <Text style={styles.text}>Enter your star</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -183,13 +184,12 @@ function Feed({navigation}){
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Icon name="md-heart" style={styles.homepageWelcomeIconStyle}/>
-      <Text style={styles.homepageWelcomeTextStyle}>Welcome back!</Text>
-      <View style={styles.container}>
+      <Icon name="md-heart" style={styles.h1}/>
+      <Text style={styles.h1}>Welcome back!</Text>
 
       <Picker
         selectedValue={selectedValue}
-        style={{ height: 50, width: 500 }}
+        style={{ height: 200, width: 500 }}
         onValueChange={(itemValue, itemIndex) => {
           setSelectedValue(itemValue);
           navigation.navigate(itemValue)
@@ -199,7 +199,6 @@ function Feed({navigation}){
         <Picker.Item label="Debutea" value="Debutea" />
         <Picker.Item label="PhoBar" value="PhoBar" />
       </Picker>
-      </View>
 
     </View>
   );
@@ -209,15 +208,14 @@ function PhoBarScreen({navigation}){
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Image source={require('./components/images/phobar.jpg')} style={{ width: 100, height: 100 }}/>
-      <Text style={{ fontSize: 30, position:"absolute", top:200}}>Welcomd back to Pho Bar</Text>
-      <Text style={{ fontSize: 15, position:"absolute", top:220}}>{"\n"}Below is your transaction history at Pho Bar</Text>
+      <Text style={[styles.h2, styles.mediumMargin]}>Welcome to Pho Bar</Text>
+      <Text style={[styles.text, styles.smallMargin]}>{"\n"}Below is your transaction history at Pho Bar</Text>
       <PersonalInfo />
-      <Button 
-        title="enter your star"
-        onPress={() => {
-          navigation.navigate('PhoBarStar')}
-        }
-      />
+      <TouchableOpacity style={[styles.button, styles.mediumMargin]} onPress={() => {
+          navigation.navigate('DebuteaStar')}}>
+        <Text style={styles.text}>Enter your star</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
@@ -305,7 +303,7 @@ function PhoBarChoiceScreen(){
 
   return (
     <>
-    <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
+    <Text style={styles.text}>Choose the amount you want to redeem</Text>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <MyKeyboard />
       <Button
@@ -333,7 +331,7 @@ function App() {
         <Stack.Screen name="Welcome" component={WelcomePage} />
         <Stack.Screen name="SignUp" component={SignUpPage} />
         <Stack.Screen name="SignIn" component={SignInPage} />
-        <Stack.Screen name="Amount" component={AmountPage} />
+        {/* <Stack.Screen name="Amount" component={AmountPage} /> */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="PhoBar" component={PhoBarScreen} />
         <Stack.Screen name="Debutea" component={DebuteaScreen} />
