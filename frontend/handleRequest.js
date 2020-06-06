@@ -38,7 +38,11 @@ function handleSignUp(email, phone, password, url, navigation, goToPage) {
         );
     }
   })
+  // .catch((error) => {
+  //   console.error('Error:'+error.status, error.url);
+  // });
 }
+
 function handleSignIn(email, password, url, navigation, goToPage){
 fetch(url, {
     method: "POST",

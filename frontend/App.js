@@ -12,7 +12,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import styles from './style'
 import {handleSignUp, handleSignIn} from './handleRequest.js'
-const URL="http://192.168.1.170:3000"
+const URL="https://localhost:3000"
 
 
 function WelcomePage({navigation}) {
@@ -45,12 +45,13 @@ function WelcomePage({navigation}) {
   );
 }
 
+//
 function SignUpPage({navigation}) {
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("")
 
-  const url = URL+'/user/signup'
+  const url = URL+'/user/signup';
   return (
       <SafeAreaView style={{flex: 1, margin:30}}>
       <ScrollView>
@@ -144,43 +145,10 @@ function SignInPage({navigation}) {
   );
 }
 
-// function AmountPage(){
-//   return (
-//     <SafeAreaView style={{flex:1, margin: 30, justifyContent: 'center', alignItems: 'center'}}>
-//     <ScrollView keyboardShouldPersistTaps='never'>
-//       <Text style={[styles.h1, styles.positionTitle]}>Please Enter Amount</Text>
-//       <TextInput
-//       style={[styles.inputText, {height: 60, width: 250, fontSize: 30}]}
-//       keyboardType = "decimal-pad"
-//       />
-//       <TouchableOpacity
-//           style={[styles.button, styles.mediumMargin]}
-//           onPress={()=>null}
-//       >
-//           <Text style={[styles.h3, styles.centerText]}>Submit</Text>
-//       </TouchableOpacity>
-//     </ScrollView>
-//     </SafeAreaView>
-//   )
-// }
 
-function DebuteaScreen({navigation}){
-  return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
-      <Text style={[styles.h2, styles.largeMargin]}>Welcome to Debutea Screen</Text>
-      <Text style={[styles.text, styles.smallMargin]}>{"\n"}Below is your transaction history at Debutea</Text>
-      <PersonalInfo />
-      <TouchableOpacity style={[styles.button, styles.mediumMargin]} onPress={() => {
-          navigation.navigate('DebuteaStar')}}>
-        <Text style={styles.text}>Enter your star</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-//
+// this is the function that handles navigation for picker
 function Feed({navigation}){
-  const [selectedValue, setSelectedValue] = useState("java");
+  const [selectedValue, setSelectedValue] = useState("Debutea");
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -192,10 +160,10 @@ function Feed({navigation}){
         style={{ height: 200, width: 500 }}
         onValueChange={(itemValue, itemIndex) => {
           setSelectedValue(itemValue);
-          navigation.navigate(itemValue)
+          navigation.navigate('CafeChoiceScreen', {name: itemValue});
         }
       }>
-        <Picker.Item label="select your cafe!!!" value="Home"/>
+        <Picker.Item label="select your cafe!!!" value="Home" disabled/>
         <Picker.Item label="Debutea" value="Debutea" />
         <Picker.Item label="PhoBar" value="PhoBar" />
       </Picker>
@@ -204,32 +172,129 @@ function Feed({navigation}){
   );
 }
 
-function PhoBarScreen({navigation}){
-  return (
+// // 
+class CafeChoiceScreen extends React.Component{
+  // here is some fetch function 
+
+  constructor(props){
+    super(props);
+    this.state = {
+      name: props.route.params.name, 
+      star: 0,
+      sticker: "🍹",
+      img: './components/images/' + props.route.params.name + '.jpg', 
+      url: '' 
+    }
+  }
+
+  // componentDidMount = () => {
+  //   fetch(url, {
+  //     method: "GET",
+  //     headers: {
+  //       Accept:'/user/addStars',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //         cafe_username: "phobar",
+  //         price: 100
+  //     }),
+  //   })
+  //   .then((response) => {
+  //     console.log("hello");
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error: ??');
+  //   });
+  // }
+  
+  // const name = this.props.navigation.getParams('name','default');
+  // const imgName = './components/images/' + cafeName + '.jpg'
+
+  render(){
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+       <Text>
+        <Image source={require('./components/images/phobar.jpg')} style={{ width: 100, height: 100 }}/>
+        <Text style={[styles.h2, styles.mediumMargin]}>Welcome to {this.state.name}</Text>
+        <Text style={[styles.text, styles.smallMargin]}>{"\n"}Below is your transaction history at {this.state.name}</Text>
+        /* <PersonalInfo /> */
+        <TouchableOpacity style={[styles.button, styles.mediumMargin]} onPress={() => {
+            this.props.navigation.navigate('RedeemScreen')}}>
+          <Text style={styles.text}>Enter your star</Text>
+        </TouchableOpacity>
+        </Text>
+      </View>
+      
+    );
+  }
+}
+
+
+class RedeemScreen extends React.Component{
+  // here is some fetch function 
+
+  constructor(props){
+    super(props);
+    this.state = {
+      star: 3, 
+      sticker : "🍹",
+    }
+  }
+
+  // componentDidMount = () => {
+  //   fetch(url, {
+  //     method: "GET",
+  //     headers: {
+  //       Accept:'/user/addStars',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //         cafe_username: "phobar",
+  //         price: 100
+  //     }),
+  //   })
+  //   .then((response) => {
+  //     console.log("hello");
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error: ??');
+  //   });
+  // }
+  
+  // const name = this.props.navigation.getParams('name','default');
+  // const imgName = './components/images/' + cafeName + '.jpg'
+
+  render(){
+    return (
+    <>
+    <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Image source={require('./components/images/phobar.jpg')} style={{ width: 100, height: 100 }}/>
-      <Text style={[styles.h2, styles.mediumMargin]}>Welcome to Pho Bar</Text>
-      <Text style={[styles.text, styles.smallMargin]}>{"\n"}Below is your transaction history at Pho Bar</Text>
-      <PersonalInfo />
-      <TouchableOpacity style={[styles.button, styles.mediumMargin]} onPress={() => {
-          navigation.navigate('DebuteaStar')}}>
-        <Text style={styles.text}>Enter your star</Text>
-      </TouchableOpacity>
-
+      <MyKeyboard sticker="🍯" star="3"/>
     </View>
-  );
+    </>  
+    );
+  }
 }
 
 
-function trysecond({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
+
+//
+// function RedeemScreen({navigation}, cafeName){
+//   const [star, setStar] = useState(0);
+//   const [sticker] = "🍹";
+
+//   return (
+//     <>
+//     <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <MyKeyboard sticker="🍯" star="3"/>
+//     </View>
+//     </>
+//   );
+// }
 
 
+//
 function HomeScreen({navigation}) {
   return (
     <>
@@ -242,6 +307,7 @@ function HomeScreen({navigation}) {
 }
 
 
+//
 function AccountScreen(){
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -256,88 +322,29 @@ function AccountScreen(){
 
 
 
-//
-function DetailsScreen({navigation}){
-  // const [title, setStar] = useState('Details');
-
-  return (
-    <View>
-        <Text style = {{ textAlign: 'center', fontSize: 20 }}>details page</Text>
-        <Button 
-          title="go to Details"
-          onPress={() => {
-            navigation.navigate('PhoBarStar')}
-          }
-        />
-    </View>
-  );
-}
-
 
 //
-function DebuteaChoiceScreen(){
-  const [star, setStar] = useState(0);
-  const [sticker] = "🍹";
-
-  return (
-    <>
-    <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <MyKeyboard />
-      <Button
-        title="submit"
-        color="green"
-        onPress={() => { setStar(star + 3) }} 
-      />
-      <Text>Right now you have: {star} stars {sticker}</Text>
-    </View>
-    </>
-  );
-}
-
-
-// 
-function PhoBarChoiceScreen(){
-  const [star, setStar] = useState(0);
-  const [sticker] = "🍑";
-
-  return (
-    <>
-    <Text style={styles.text}>Choose the amount you want to redeem</Text>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <MyKeyboard />
-      <Button
-        title="submit"
-        color="green"
-        onPress={() => { setStar(star + 4) }} 
-      />
-      <Text>Right now you have: {star} stars {sticker}</Text>
-    </View>
-    </>
-  );
-}
-
-
-
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator(); 
 const Drawer = createDrawerNavigator();
 
+//
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome" component={WelcomePage} />
-        <Stack.Screen name="SignUp" component={SignUpPage} />
-        <Stack.Screen name="SignIn" component={SignInPage} />
+        { /*<Stack.Screen name="Welcome" component={WelcomePage} />
+         <Stack.Screen name="SignUp" component={SignUpPage} />
+         <Stack.Screen name="SignIn" component={SignInPage} /> */}
         {/* <Stack.Screen name="Amount" component={AmountPage} /> */}
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="PhoBar" component={PhoBarScreen} />
-        <Stack.Screen name="Debutea" component={DebuteaScreen} />
-        <Stack.Screen name="DebuteaStar" component={DebuteaChoiceScreen} />
-        <Stack.Screen name="PhoBarStar" component={PhoBarChoiceScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="CafeChoiceScreen" component={CafeChoiceScreen} />
+        {/*<Stack.Screen name="PhoBar" component={CafeChoiceScreen} /> */}
+        {/*<Stack.Screen name="Debutea" component={CafeChoiceScreen} /> */}
+        <Stack.Screen name="RedeemScreen" component={RedeemScreen}/>
+        {/* <Stack.Screen name="DebuteaStar" component={DebuteaChoiceScreen} /> */}
+        {/* <Stack.Screen name="PhoBarStar" component={PhoBarChoiceScreen} /> */}
+        {/* <Stack.Screen name="Details" component={DetailsScreen} />*/}
       </Stack.Navigator>
     </NavigationContainer>
   );

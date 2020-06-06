@@ -8,10 +8,18 @@ class MyKeyboard extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      newValue: '',
       height: 40, 
-      name: "press me"
+      name: "press me",
+      star: this.props.star,
+      value: 0
     }
+  }
+
+  parseIntegerInside(currval){
+    if(currval == NaN){
+      currval = 0
+    }
+    return currval
   }
 
   render() {  
@@ -20,13 +28,24 @@ class MyKeyboard extends Component {
       	<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       		<View style={{flex: 50}}>
   				<TextInput 
-  					onChangeText={(value) => this.setState({value})}
+                onChangeText={(currval) => {
+                  currval = Number.parseInt(currval)
+                  currval = Number.isNaN(currval) ? 0 : currval
+                  this.setState({value: currval})
+                  }
+                }
           			placeholder="Enter The Amount"  
           			underlineColorAndroid='transparent'  
-        			style={styles.TextInputStyle}  
+        			  style={styles.TextInputStyle}  
           			keyboardType={'numeric'}  />
-          	</View>
-		</TouchableWithoutFeedback>
+          </View>
+		    </TouchableWithoutFeedback>
+        <Button
+            title="submit"
+            color="green"
+            onPress={() => this.setState({star: Number.parseInt(this.state.star) + Number.parseInt(this.state.value)})} 
+        />
+        <Text>Right now you have: {this.state.star} stars {this.props.sticker}</Text>
       </View>  
     );  
   }  
@@ -55,3 +74,6 @@ const styles = StyleSheet.create({
     marginBottom: 100  
   }  
 });
+
+
+///* onChangeText={(value) => this.setState({value})} */

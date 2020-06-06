@@ -10,25 +10,25 @@ class PersonalInfo extends React.Component{
     }
   }
 
-  componentDidMount = () => {
-    // fetch("http://localhost:4000/user/addStars", {
-    //   method: "POST",
-    //   headers: {
-    //     Accept:'/user/addStars',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //       cafe_username: "phobasr",
-    //       price: 100
-    //   }),
-    // })
-    // .then((response) => {
-    //   console.log("hello");
-    // })
-    // .catch((error) => {
-    //   console.error('Error: ??');
-    // });
-  }
+  // componentDidMount = () => {
+  //   fetch("https://reactnative.dev/movies.json", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept:'/user/addStars',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //         cafe_username: "phobar",
+  //         price: 100
+  //     }),
+  //   })
+  //   .then((response) => {
+  //     console.log("hello");
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error: ??');
+  //   });
+  // }
 
    render() {
       return (
