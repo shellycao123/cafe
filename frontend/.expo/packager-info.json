@@ -3,8 +3,8 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://iy-cvh.anonymous.frontend.exp.direct",
+  "packagerNgrokUrl": "https://packager.iy-cvh.anonymous.frontend.exp.direct",
+  "ngrokPid": 80563,
   "webpackServerPort": null
 }

@@ -12,13 +12,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import styles from './style'
 import {handleSignUp, handleSignIn} from './handleRequest.js'
-const URL="https://localhost:3000"
+const URL="http://192.168.1.170:3000"
 
 
 function WelcomePage({navigation}) {
   return (
     <SafeAreaView style={{flex: 1, margin:30, alignItems:'center'}}>
-    <ScrollView>
       <Text style={[styles.h1, styles.centerText, styles.largeMargin]}>Welcome!</Text>
       <TouchableOpacity
           style={[styles.button, styles.mediumMargin]}
@@ -33,25 +32,16 @@ function WelcomePage({navigation}) {
       >
           <Text style={[styles.h3, styles.centerText]}>Sign In</Text>
       </TouchableOpacity>
-
-      {/* <TouchableOpacity
-          style={[styles.button, styles.mediumMargin]}
-          onPress={()=>navigation.navigate("Amount")}
-      >
-          <Text style={[styles.h3, styles.centerText]}>Amount Page</Text>
-      </TouchableOpacity> */}
-    </ScrollView>
     </SafeAreaView>
   );
 }
 
-//
 function SignUpPage({navigation}) {
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("")
 
-  const url = URL+'/user/signup';
+  const url = URL+'/user/signup'
   return (
       <SafeAreaView style={{flex: 1, margin:30}}>
       <ScrollView>
@@ -145,10 +135,12 @@ function SignInPage({navigation}) {
   );
 }
 
-
 // this is the function that handles navigation for picker
 function Feed({navigation}){
-  const [selectedValue, setSelectedValue] = useState("Debutea");
+  const [selectedValue, setSelectedValue] = useState("");
+
+  // should fetch this array from memory 
+  var cafe = ["Debutea", "PhoBar"];
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -160,19 +152,30 @@ function Feed({navigation}){
         style={{ height: 200, width: 500 }}
         onValueChange={(itemValue, itemIndex) => {
           setSelectedValue(itemValue);
-          navigation.navigate('CafeChoiceScreen', {name: itemValue});
+          if(itemValue != "null"){
+            navigation.navigate('CafeChoiceScreen', {name: itemValue});
+          }
         }
       }>
-        <Picker.Item label="select your cafe!!!" value="Home" disabled/>
-        <Picker.Item label="Debutea" value="Debutea" />
-        <Picker.Item label="PhoBar" value="PhoBar" />
+        <Picker.Item label="select the cafe!!" value="null" enabled={true}/>
+        {cafe.map((c, index) => 
+              <Picker.Item
+                label={c} 
+                value={c}
+                key={index} />
+        )}
       </Picker>
-
     </View>
   );
 }
 
-// // 
+
+function buildStaticImagePath(name){
+  var path = './components/images/' + name; 
+  return path; 
+}
+
+//
 class CafeChoiceScreen extends React.Component{
   // here is some fetch function 
 
@@ -183,51 +186,27 @@ class CafeChoiceScreen extends React.Component{
       star: 0,
       sticker: "🍹",
       img: './components/images/' + props.route.params.name + '.jpg', 
-      url: '' 
+      url: buildStaticImagePath(props.route.params.name)
     }
   }
-
-  // componentDidMount = () => {
-  //   fetch(url, {
-  //     method: "GET",
-  //     headers: {
-  //       Accept:'/user/addStars',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //         cafe_username: "phobar",
-  //         price: 100
-  //     }),
-  //   })
-  //   .then((response) => {
-  //     console.log("hello");
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error: ??');
-  //   });
-  // }
-  
-  // const name = this.props.navigation.getParams('name','default');
-  // const imgName = './components/images/' + cafeName + '.jpg'
 
   render(){
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-       <Text>
         <Image source={require('./components/images/phobar.jpg')} style={{ width: 100, height: 100 }}/>
         <Text style={[styles.h2, styles.mediumMargin]}>Welcome to {this.state.name}</Text>
         <Text style={[styles.text, styles.smallMargin]}>{"\n"}Below is your transaction history at {this.state.name}</Text>
-        /* <PersonalInfo /> */
         <TouchableOpacity style={[styles.button, styles.mediumMargin]} onPress={() => {
-            this.props.navigation.navigate('RedeemScreen')}}>
+            this.props.navigation.navigate('RedeemScreen', {name: this.state.name})}}>
           <Text style={styles.text}>Enter your star</Text>
         </TouchableOpacity>
-        </Text>
       </View>
       
     );
   }
 }
+
+
 
 
 class RedeemScreen extends React.Component{
@@ -236,62 +215,25 @@ class RedeemScreen extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      name: props.route.params.name,
       star: 3, 
       sticker : "🍹",
+      url: URL+'/user/addStars'
     }
   }
-
-  // componentDidMount = () => {
-  //   fetch(url, {
-  //     method: "GET",
-  //     headers: {
-  //       Accept:'/user/addStars',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //         cafe_username: "phobar",
-  //         price: 100
-  //     }),
-  //   })
-  //   .then((response) => {
-  //     console.log("hello");
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error: ??');
-  //   });
-  // }
-  
-  // const name = this.props.navigation.getParams('name','default');
-  // const imgName = './components/images/' + cafeName + '.jpg'
 
   render(){
     return (
     <>
-    <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <MyKeyboard sticker="🍯" star="3"/>
+    <Text style={[styles.h3, {marginTop: 200}, styles.centerText]}>Choose the amount you want to add</Text>
+    <View style={styles.mediumMargin}>
+      <MyKeyboard sticker={this.state.sticker} star={this.state.star} cafeName={this.state.name} url={this.state.url}/>
     </View>
     </>  
     );
   }
 }
 
-
-
-//
-// function RedeemScreen({navigation}, cafeName){
-//   const [star, setStar] = useState(0);
-//   const [sticker] = "🍹";
-
-//   return (
-//     <>
-//     <Text style={styles.textAboveKeyboard}>Choose the amount you want to redeem</Text>
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <MyKeyboard sticker="🍯" star="3"/>
-//     </View>
-//     </>
-//   );
-// }
 
 
 //
@@ -323,28 +265,28 @@ function AccountScreen(){
 
 
 
+
+
 //
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator(); 
 const Drawer = createDrawerNavigator();
 
-//
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        { /*<Stack.Screen name="Welcome" component={WelcomePage} />
-         <Stack.Screen name="SignUp" component={SignUpPage} />
-         <Stack.Screen name="SignIn" component={SignInPage} /> */}
+        <Stack.Screen name="Welcome" component={WelcomePage} />
+        <Stack.Screen name="SignUp" component={SignUpPage} />
+        <Stack.Screen name="SignIn" component={SignInPage} />
         {/* <Stack.Screen name="Amount" component={AmountPage} /> */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="CafeChoiceScreen" component={CafeChoiceScreen} />
-        {/*<Stack.Screen name="PhoBar" component={CafeChoiceScreen} /> */}
-        {/*<Stack.Screen name="Debutea" component={CafeChoiceScreen} /> */}
+        {/* <Stack.Screen name="PhoBar" component={PhoBarScreen} />
+        <Stack.Screen name="Debutea" component={DebuteaScreen} /> */}
         <Stack.Screen name="RedeemScreen" component={RedeemScreen}/>
-        {/* <Stack.Screen name="DebuteaStar" component={DebuteaChoiceScreen} /> */}
-        {/* <Stack.Screen name="PhoBarStar" component={PhoBarChoiceScreen} /> */}
-        {/* <Stack.Screen name="Details" component={DetailsScreen} />*/}
+        {/* <Stack.Screen name="DebuteaStar" component={DebuteaChoiceScreen} />
+        <Stack.Screen name="PhoBarStar" component={PhoBarChoiceScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
