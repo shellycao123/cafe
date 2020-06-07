@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 // import { Text, View, Button } from 'react-native';
 import { Platform, StyleSheet, Text, View, Button, Alert, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
+import {addStar} from './../handleRequest.js'
+
 
 class MyKeyboard extends Component {  
 
@@ -15,18 +17,12 @@ class MyKeyboard extends Component {
     }
   }
 
-  parseIntegerInside(currval){
-    if(currval == NaN){
-      currval = 0
-    }
-    return currval
-  }
 
   render() {  
     return (  
       <View style={styles.container}>  
       	<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      		<View style={{flex: 50}}>
+      		<View>
   				<TextInput 
                 onChangeText={(currval) => {
                   currval = Number.parseInt(currval)
@@ -43,7 +39,7 @@ class MyKeyboard extends Component {
         <Button
             title="submit"
             color="green"
-            onPress={() => this.setState({star: Number.parseInt(this.state.star) + Number.parseInt(this.state.value)})} 
+            onPress={() => addStar(this.props.url, this.props.cafeName, Number.parseInt(this.state.amount))} 
         />
         <Text>Right now you have: {this.state.star} stars {this.props.sticker}</Text>
       </View>  
@@ -57,8 +53,6 @@ export default MyKeyboard;
 // 
 const styles = StyleSheet.create({
   container: {
-  	position: 'absolute', 
-  	flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   }, 
@@ -71,7 +65,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,  
     borderColor: '#009688', 
     backgroundColor: '#F5FCFF', 
-    marginBottom: 100  
+    marginBottom: 50 
   }  
 });
 
